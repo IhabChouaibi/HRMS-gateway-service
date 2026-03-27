@@ -6,30 +6,35 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
-//@Configuration
-public class WebConfig {
+import java.util.List;
 
-   // @Bean
+@Configuration
+public class CorsConfig {
+
+    @Bean
     public CorsWebFilter corsWebFilter() {
-        // Configuration CORS
         CorsConfiguration corsConfig = new CorsConfiguration();
 
+        corsConfig.setAllowedOrigins(List.of(
+                "http://localhost:80",
+                "http://localhost:4200",
+                "https://mon-frontend.com"
+        ));
+
+        corsConfig.setAllowedMethods(List.of(
+                "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"
+        ));
+
+        corsConfig.setAllowedHeaders(List.of(
+                "Authorization",
+                "Content-Type",
+                "X-Requested-With"
+        ));
+
         corsConfig.setAllowCredentials(true);
-        // ⭐ DEV (Angular local)
-        corsConfig.addAllowedOrigin("http://localhost:4200");
 
-        // ⭐ Docker frontend
-        corsConfig.addAllowedOrigin("http://frontend");
+        corsConfig.setMaxAge(3600L);
 
-        // ⭐ Methods
-        corsConfig.addAllowedMethod("*");
-
-        // ⭐ Headers
-        corsConfig.addAllowedHeader("*");
-
-        // ⭐ Exposed headers
-        corsConfig.addExposedHeader("Authorization");
-        // Mapping pour toutes les routes
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
 
